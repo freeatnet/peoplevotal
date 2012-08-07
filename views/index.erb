@@ -1,0 +1,165 @@
+<h1 id="intro-title">Peoplevotal Tracker</h1>
+<table id="peoplevotal" style="display:none;">
+	<tbody>
+		<tr id="iterations-list">
+			<th></th>
+			<th>Current</th>
+			<th>Next</th>
+			<th>Icebox</th>
+			<th></th>
+		</tr>
+		<% people.each do |person| %>
+		<tr>
+			<th class="person">
+				<img src="<%= "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(person[:email])}?s=90" %>" />
+				<%= person[:name] %>
+			</th>
+			<td>
+				<% tasks[person[:name]][:current].each do |project_name, person_project_tasks| %>
+					<fieldset class="project">
+						<legend><%= project_name %></legend>
+					<% person_project_tasks.each do |t| %>
+						<div class="story <%= "#{t.story_type} #{t.current_state}" %>" title="<%= "#{t.name}" %>"></div>
+					<% end %>
+					</fieldset>
+				<% end %>
+			</td>
+			<td>
+				<% tasks[person[:name]][:backlog].each do |project_name, person_project_tasks| %>
+					<fieldset class="project">
+						<legend><%= project_name %></legend>
+					<% person_project_tasks.each do |t| %>
+						<div class="story <%= "#{t.story_type} #{t.current_state}" %>" title="<%= "#{t.name}" %>"></div>
+					<% end %>
+					</fieldset>
+				<% end %>
+			</td>
+			<td>
+				<% tasks[person[:name]][:unscheduled].each do |project_name, person_project_tasks| %>
+					<fieldset class="project">
+						<legend><%= project_name %></legend>
+					<% person_project_tasks.each do |t| %>
+						<div class="story <%= "#{t.story_type} #{t.current_state}" %>" title="<%= "#{t.name}" %>"></div>
+					<% end %>
+					</fieldset>
+				<% end %>
+			</td>
+			<th class="person">
+				<img src="<%= "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(person[:email])}?s=90" %>" />
+				<%= person[:name] %>
+			</th>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+
+
+	
+<style>
+	#intro-title {
+		width: 500px;
+		margin: 0 auto;
+		font: 48px/52px Helvetica,sans-serif;
+		color: #777;
+		letter-spacing: 2px;
+	}
+
+	#peoplevotal th, #peoplevotal td {
+		text-align: left;
+	}
+
+	#peoplevotal td {
+		min-width: 250px;
+	}
+
+	#iterations-list th {
+		height: 50px;
+		text-align: center;
+	}
+
+	#peoplevotal tr:nth-child(even) {
+		background-color: #EEE;
+	}
+
+	th.person {
+		min-width: 250px;
+	}
+
+	th.person img {
+		height: 90px;
+		width: 90px;
+		margin-right: 10px;
+	}
+	
+	.project {
+		width: 500px;
+		border: 1px solid #CCC;
+		margin: 5px 10px;
+		padding: 5px;
+	}
+	
+	.project legend {
+		width: auto;
+		padding: 0 2px;
+		margin: 0px;
+		font-size: 13px;
+		line-height: 16px;
+		border: 0px;
+	}
+
+	.story {
+		display: inline-block;
+		height: 25px;
+		width: 25px;
+		border: 1px solid #CCC;
+		background-repeat: no-repeat;
+		background-position: center;
+
+	}
+
+	.unscheduled, .unstarted {
+		background-color: #F4F4F4;
+	}
+
+	.started, .finished, .delivered {
+		background-color: #F3F3D1;
+	}
+
+	.accepted {
+		background-color: #DAEBCF;
+	}
+	
+	.rejected {
+		background-color: rgba(167, 45, 74, 0.5);
+	}
+
+	.bug {
+		background-image: url("https://cdn1-pivotaltracker.pantherssl.com/images/v7/application/stories_view/icons/bug.png");
+	}
+
+	.chore {
+		background-image: url("https://cdn1-pivotaltracker.pantherssl.com/images/v7/application/stories_view/icons/chore.png");
+	}
+
+	.feature {
+		background-image: url("https://cdn1-pivotaltracker.pantherssl.com/images/v7/application/stories_view/icons/feature.png");
+	}
+</style>
+
+<script>
+	$.getJSON("/projects", function (result, resultKind) {
+		if (resultKind == "success") {
+			$("#intro-title").fadeOut(function () {
+				$("body").removeClass("loading");
+				$("#peoplevotal").fadeIn();
+			});
+			
+		} else {
+			if(confirm("Something went wrong. Try again?")) {
+				window.location.reload();
+			} else {
+				/* nop */
+			}
+		}
+	});
+</script>
