@@ -4,6 +4,13 @@ peoplevotal
 A Pivotal Tracker extension that breaks down tasks in current, backlog, and icebox by project members. Features a pretty dumb implementation I put together in a couple of hours.
 
 ## Running it
+
+Clone and navigate to the application directory:
+
+`git clone git://github.com/freeatnet/peoplevotal.git`
+
+`cd peoplevotal`
+
 You will need to install the following gems:
 * Sinatra: `gem install sinatra`
 * JSON: `gem install json`
